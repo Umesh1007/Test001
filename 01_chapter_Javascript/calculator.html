@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #1a1a2e;
+            --bg-secondary: #16213e;
+            --bg-tertiary: #0f3460;
+            --text-primary: #eaeaea;
+            --text-secondary: #a0a0a0;
+            --accent: #e94560;
+            --accent-hover: #ff6b6b;
+            --operator-bg: #e94560;
+            --operator-hover: #ff6b6b;
+            --operator-active: #c73659;
+            --key-bg: #1f4068;
+            --key-hover: #2a5a8a;
+            --key-active: #16213e;
+            --clear-bg: #e94560;
+            --clear-hover: #ff6b6b;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            --border-radius: 16px;
+            --key-radius: 12px;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: var(--bg-primary);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .calculator {
+            background: var(--bg-secondary);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            width: 100%;
+            max-width: 340px;
+            overflow: hidden;
+        }
+
+        .display-container {
+            padding: 24px;
+            background: var(--bg-tertiary);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .display {
+            width: 100%;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: var(--text-primary);
+            font-size: 2.5rem;
+            font-weight: 300;
+            text-align: right;
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            letter-spacing: 1px;
+        }
+
+        .display::placeholder {
+            color: var(--text-secondary);
+        }
+
+        .keypad {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            padding: 20px;
+        }
+
+        .key {
+            border: none;
+            border-radius: var(--key-radius);
+            font-size: 1.5rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            padding: 20px 0;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .key:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 2px;
+        }
+
+        .key:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .key:active {
+            transform: translateY(0);
+            box-shadow: none;
+        }
+
+        .key--number {
+            background: var(--key-bg);
+            color: var(--text-primary);
+        }
+
+        .key--number:hover {
+            background: var(--key-hover);
+        }
+
+        .key--number:active {
+            background: var(--key-active);
+        }
+
+        .key--operator {
+            background: var(--operator-bg);
+            color: white;
+            font-weight: 600;
+        }
+
+        .key--operator:hover {
+            background: var(--operator-hover);
+        }
+
+        .key--operator:active {
+            background: var(--operator-active);
+        }
+
+        .key--clear {
+            background: var(--clear-bg);
+            color: white;
+            font-weight: 600;
+            grid-column: span 2;
+        }
+
+        .key--clear:hover {
+            background: var(--clear-hover);
+        }
+
+        .key--clear:active {
+            background: var(--operator-active);
+        }
+
+        .key--equals {
+            background: var(--accent);
+            color: white;
+            font-weight: 600;
+            grid-column: span 2;
+        }
+
+        .key--equals:hover {
+            background: var(--accent-hover);
+        }
+
+        .key--equals:active {
+            background: var(--operator-active);
+        }
+
+        .key--decimal {
+            font-size: 2rem;
+            line-height: 1;
+        }
+
+        @media (max-width: 400px) {
+            .calculator {
+                max-width: 100%;
+                border-radius: 0;
+                min-height: 100vh;
+            }
+
+            .display {
+                font-size: 2rem;
+            }
+
+            .key {
+                padding: 18px 0;
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator" role="application" aria-label="Calculator">
+        <div class="display-container">
+            <input
+                type="text"
+                class="display"
+                readonly
+                placeholder="0"
+                aria-label="Calculator display"
+                id="display"
+            >
+        </div>
+        <div class="keypad" id="keypad" role="grid" aria-label="Calculator keypad">
+            <button class="key key--clear" data-action="clear" aria-label="Clear">C</button>
+            <button class="key key--operator" data-action="operator" data-value="/" aria-label="Divide">÷</button>
+            <button class="key key--operator" data-action="operator" data-value="*" aria-label="Multiply">×</button>
+            <button class="key key--operator" data-action="operator" data-value="-" aria-label="Subtract">−</button>
+
+            <button class="key key--number" data-action="number" data-value="7" aria-label="7">7</button>
+            <button class="key key--number" data-action="number" data-value="8" aria-label="8">8</button>
+            <button class="key key--number" data-action="number" data-value="9" aria-label="9">9</button>
+            <button class="key key--operator" data-action="operator" data-value="+" aria-label="Add">+</button>
+
+            <button class="key key--number" data-action="number" data-value="4" aria-label="4">4</button>
+            <button class="key key--number" data-action="number" data-value="5" aria-label="5">5</button>
+            <button class="key key--number" data-action="number" data-value="6" aria-label="6">6</button>
+            <button class="key key--operator" data-action="equals" aria-label="Equals">=</button>
+
+            <button class="key key--number" data-action="number" data-value="1" aria-label="1">1</button>
+            <button class="key key--number" data-action="number" data-value="2" aria-label="2">2</button>
+            <button class="key key--number" data-action="number" data-value="3" aria-label="3">3</button>
+            <button class="key key--equals" data-action="equals" aria-label="Equals">=</button>
+
+            <button class="key key--number key--clear" data-action="number" data-value="0" aria-label="0" style="grid-column: span 2;">0</button>
+            <button class="key key--number key--decimal" data-action="decimal" aria-label="Decimal point">.</button>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            'use strict';
+
+            const display = document.getElementById('display');
+            const keypad = document.getElementById('keypad');
+
+            let currentInput = '0';
+            let previousInput = '';
+            let operator = null;
+            let shouldResetDisplay = false;
+
+            function updateDisplay() {
+                display.value = currentInput;
+            }
+
+            function handleNumber(value) {
+                if (shouldResetDisplay) {
+                    currentInput = value;
+                    shouldResetDisplay = false;
+                } else {
+                    currentInput = currentInput === '0' ? value : currentInput + value;
+                }
+                updateDisplay();
+            }
+
+            function handleDecimal() {
+                if (shouldResetDisplay) {
+                    currentInput = '0.';
+                    shouldResetDisplay = false;
+                    updateDisplay();
+                    return;
+                }
+                if (!currentInput.includes('.')) {
+                    currentInput += '.';
+                    updateDisplay();
+                }
+            }
+
+            function handleOperator(nextOperator) {
+                const inputValue = parseFloat(currentInput);
+
+                if (operator && !shouldResetDisplay) {
+                    const result = calculate(previousInput, inputValue, operator);
+                    currentInput = String(result);
+                    updateDisplay();
+                } else {
+                    previousInput = currentInput;
+                }
+
+                operator = nextOperator;
+                shouldResetDisplay = true;
+            }
+
+            function calculate(prev, current, op) {
+                const prevNum = parseFloat(prev);
+                const currentNum = parseFloat(current);
+
+                if (isNaN(prevNum) || isNaN(currentNum)) return currentNum;
+
+                switch (op) {
+                    case '+': return prevNum + currentNum;
+                    case '-': return prevNum - currentNum;
+                    case '*': return prevNum * currentNum;
+                    case '/': return currentNum !== 0 ? prevNum / currentNum : 'Error';
+                    default: return currentNum;
+                }
+            }
+
+            function handleEquals() {
+                if (operator && !shouldResetDisplay) {
+                    const result = calculate(previousInput, currentInput, operator);
+                    currentInput = result === 'Error' ? 'Error' : String(result);
+                    updateDisplay();
+                    operator = null;
+                    previousInput = '';
+                    shouldResetDisplay = true;
+                }
+            }
+
+            function handleClear() {
+                currentInput = '0';
+                previousInput = '';
+                operator = null;
+                shouldResetDisplay = false;
+                updateDisplay();
+            }
+
+            function handleKeyClick(event) {
+                const button = event.target.closest('button');
+                if (!button) return;
+
+                const action = button.dataset.action;
+                const value = button.dataset.value;
+
+                switch (action) {
+                    case 'number':
+                        handleNumber(value);
+                        break;
+                    case 'decimal':
+                        handleDecimal();
+                        break;
+                    case 'operator':
+                        handleOperator(value);
+                        break;
+                    case 'equals':
+                        handleEquals();
+                        break;
+                    case 'clear':
+                        handleClear();
+                        break;
+                }
+            }
+
+            function handleKeyboard(event) {
+                const key = event.key;
+
+                if (key >= '0' && key <= '9') {
+                    handleNumber(key);
+                    event.preventDefault();
+                } else if (key === '.') {
+                    handleDecimal();
+                    event.preventDefault();
+                } else if (key === '+' || key === '-' || key === '*' || key === '/') {
+                    handleOperator(key);
+                    event.preventDefault();
+                } else if (key === 'Enter' || key === '=') {
+                    handleEquals();
+                    event.preventDefault();
+                } else if (key === 'Escape' || key === 'c' || key === 'C') {
+                    handleClear();
+                    event.preventDefault();
+                } else if (key === 'Backspace') {
+                    if (currentInput.length > 1) {
+                        currentInput = currentInput.slice(0, -1);
+                    } else {
+                        currentInput = '0';
+                    }
+                    updateDisplay();
+                    event.preventDefault();
+                }
+            }
+
+            keypad.addEventListener('click', handleKeyClick);
+            document.addEventListener('keydown', handleKeyboard);
+
+            updateDisplay();
+        })();
+    </script>
+</body>
+</html>
