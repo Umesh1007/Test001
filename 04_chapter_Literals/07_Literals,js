@@ -1,0 +1,18 @@
+// 	Literals	Raw values written directly in code — the data itself	
+//  let  total  =   10   +   20   ;
+// 	10 and 20 are literals, the raw values being added together
+
+let age = 30; // 30 is a literal, numeric
+let name = "Umesh"; // "Umesh" is a literal, string
+let isActive = true; // true is a literal, boolean
+let pi = 3.14; // 3.14 is a literal, floating-point number/Numeric
+let nullValue = null; // null is a literal, representing no value
+let underdefinedValue = undefined; // undefined is a literal, representing an uninitialized variable
+
+console.log(typeof age); // Output: number                   typeof -----> Datatype
+console.log(typeof name); // Output: string
+console.log(typeof isActive); // Output: boolean
+console.log(typeof pi); // Output: number
+console.log(typeof nullValue);  // Output: object (this is a known quirk in JavaScript)
+console.log(typeof underdefinedValue); // Output: undefined     
+

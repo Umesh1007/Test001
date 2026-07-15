@@ -1,0 +1,25 @@
+//
+// JS Interview Question
+// 
+
+
+let validName = "Umesh"; // Valid identifier
+let _privateVar = "Private"; // Valid identifier starting with underscore
+let $dollarVar = "Dollar"; // Valid identifier starting with dollar sign
+
+/*
+let 2ndItem = "Second"; // Invalid identifier (cannot start with a number)
+let 2ndItem = "Second"; //syntax error: Unexpected number
+
+let class = "MyClass"; // Invalid identifier (reserved keyword)
+let const = "Constant"; // Invalid identifier (reserved keyword)
+let function = "MyFunction"; // Invalid identifier (reserved keyword)
+*/
+
+
+let Function = "MyFunction"; // Valid identifier (case-sensitive, not a reserved keyword)
+
+let MyVar = "uppercase M"; // Valid identifier (case-sensitive, not a reserved keyword)
+let myVar = "lowercase m"; // Valid identifier (case-sensitive, not a reserved keyword)
+
+
