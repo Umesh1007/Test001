@@ -1,26 +1,28 @@
-// Rule of thumb
-// == -> loose equality (does type coercion, surprising)
-// === -> strict equality (no type coercion, what you usally want)
+// 🧠 Confusing Comparisons — The Tricky Parts
 
-console.log("" == 0); // Output: true (loose comparison, empty string is coerced to 0)
-console.log("" === 0); // Output: false (strict comparison, different types)
+// ==  -> Loose equality (does type coercion — surprising results)
+// === -> Strict equality (no coercion — what you usually want)
 
-console.log("0" == 0); // Output: true (loose comparison, string "0" is coerced to number 0)
-console.log("0" === 0); // Output: false (strict comparison, different types)
+console.log("" == 0);     // true  (empty string coerced to 0)
+console.log("" === 0);    // false (string !== number)
 
+console.log("0" == 0);    // true  ("0" coerced to 0)
+console.log("0" === 0);   // false (string !== number)
 
+// --- null vs undefined Comparison ---
+// null     -> Intentionally empty (you set it)
+// undefined -> Unintentionally empty (JS default)
 
-// null vs undefined
-// null -> explicitly set to no value
-// undefined -> variable declared but not assigned a value
+console.log(null == undefined);   // true  (loose says "both are empty")
+console.log(null === undefined);  // false (strict says "different types")
 
-console.log(null == undefined); // Output: true (loose comparison, both are considered equal)
-console.log(null === undefined); // Output: false (strict comparison, different types)
+console.log(null == 0);           // false (null is NOT coerced to 0 with ==)
+console.log(undefined == 0);      // false
 
-console.log(null == 0); // Output: false (loose comparison, null is not equal to 0)
-console.log(undefined == 0); // Output: false (loose comparison, undefined is not equal to 0)
+console.log(null >= 0);           // true  (null IS coerced to 0 with >=)
+console.log(undefined >= 0);      // false
 
-console.log(null>=0); // Output: true (loose comparison, null is  to 0) (null means somthing greater than 0)
-console.log(undefined>=0); // Output: false (loose comparison, undefined is not coerced to a number)
+console.log(null > 0);            // false
+console.log(null == 0 || null > 0); // false
 
-console.log(null ==0 || null > 0); // Output: false (loose comparison, null is not equal to 0 and not greater than 0)
+// 🥇 Rule of thumb: Always use === and !== — never trust == with edge cases
